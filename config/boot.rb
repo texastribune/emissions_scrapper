@@ -18,5 +18,3 @@ Mongoid.load!("config/mongoid.yml", :development)
 
 Dir["#{APP_ROOT}/lib/**/*.rb"].sort.each {|file| require file}
 Dir["#{APP_ROOT}/models/**/*.rb"].sort.each {|file| require file}
-
-puts "Loaded"

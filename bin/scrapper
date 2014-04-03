@@ -13,8 +13,8 @@ when "download"
   EmissionScrapper.download(from, to)
 when "database"
   EmissionStorer.start
-when "all"
-  STDOUT.puts "called restart"
+when "export"
+  EmissionCSV.call
 else
   STDOUT.puts <<-EOF
 Please provide command name
@@ -22,7 +22,7 @@ Please provide command name
 Usage:
   scrapper download
   scrapper database
-  scrapper all
+  scrapper export
 EOF
 end
 
