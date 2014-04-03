@@ -7,11 +7,11 @@ require 'boot'
 require 'emission_scrapper'
 
 case ARGV[0]
-when "download"
+when "sync"
   from = ARGV[1] ? ARGV[1] : 10001
   to = ARGV[2] ? ARGV[2] : 20000
   EmissionScrapper.download(from, to)
-when "database"
+when "scrap"
   EmissionStorer.start
 when "export"
   EmissionCSV.call
@@ -21,7 +21,7 @@ Please provide command name
 
 Usage:
   scrapper download
-  scrapper database
+  scrapper scrap
   scrapper export
 EOF
 end

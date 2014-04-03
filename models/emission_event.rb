@@ -41,8 +41,24 @@ class EmissionEvent
     self.event_ended_time = convert_time(self.event_ended)
     self.event_duration = ((self.event_ended_time -
                             self.event_began_time)/60/60)
-    #self.city = self.city_county.split(',')[0].strip
-    #self.county = self.city_county.split(',')[1].strip
+    write_attribute(:city, find_city(self.city_county))
+    write_attribute(:county, find_county(self.city_county))
+  end
+
+  def find_city(city_county_str)
+    if city_county_str.split(',')[0]
+      city_county_str.split(',')[0].strip
+    else
+      ""
+    end
+  end
+
+  def find_county(city_county_str)
+    if city_county_str.split(',')[1]
+      city_county_str.split(',')[1].strip
+    else
+      ""
+    end
   end
 
   def convert_time(str)

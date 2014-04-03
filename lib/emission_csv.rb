@@ -1,8 +1,17 @@
 require 'csv'
 
 class EmissionCSV
-  def self.call
-    self.new.call
+  def self.call(version=:full)
+    #if version == :full
+      #self.new.call
+    #else
+      #self.new(:short).call
+    #end
+      self.new(:short).call
+  end
+
+  def initialize(version=:full)
+    @full = version == :full ? true : false
   end
 
   def call
@@ -21,10 +30,37 @@ class EmissionCSV
   end
 
   def titles
-    EmissionEvent.fields.keys.map(&:titleize)
+    if @full
+      full_fields(&:titleize)
+    else
+      short_fields.map(&:titleize)
+    end
   end
 
   def fields
-    EmissionEvent.fields.keys.map(&:to_sym)
+    if @full
+      full_fields.map(&:to_sym)
+    else
+      short_fields(&:to_sym)
+    end
+  end
+
+  def full_fields
+    EmissionEvent.fields.keys
+  end
+
+  def short_fields
+    full_fields - removed
+  end
+
+  def removed
+    %w(
+      physical_location
+      city_county
+      type_of_air_emission_event
+      cause
+      action_taken
+      emissions_estimation_method
+    )
   end
 end
