@@ -1,0 +1,6 @@
+development:
+  sessions:
+    default:
+      database: emissions
+      hosts:
+        - 0.0.0.0:27017
