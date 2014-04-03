@@ -14,7 +14,11 @@ when "sync"
 when "scrap"
   EmissionStorer.start
 when "export"
-  EmissionCSV.call
+  if ARGV[1]
+    EmissionCSV.call(ARGV[1])
+  else
+    EmissionCSV.call
+  end
 else
   STDOUT.puts <<-EOF
 Please provide command name
@@ -22,7 +26,7 @@ Please provide command name
 Usage:
   scrapper download
   scrapper scrap
-  scrapper export
+  scrapper export (short/full)
 EOF
 end
 

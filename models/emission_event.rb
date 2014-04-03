@@ -39,8 +39,8 @@ class EmissionEvent
   def store_numeric_values
     self.event_began_time = convert_time(self.event_began)
     self.event_ended_time = convert_time(self.event_ended)
-    self.event_duration = ((self.event_ended_time -
-                            self.event_began_time)/60/60)
+    self.event_duration = (self.event_ended_time -
+                            self.event_began_time)*24
     write_attribute(:city, find_city(self.city_county))
     write_attribute(:county, find_county(self.city_county))
   end

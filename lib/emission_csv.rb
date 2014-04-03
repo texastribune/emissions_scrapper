@@ -1,16 +1,15 @@
 require 'csv'
 
 class EmissionCSV
-  def self.call(version=:full)
-    #if version == :full
-      #self.new.call
-    #else
-      #self.new(:short).call
-    #end
-      self.new(:short).call
+  def self.call(version=:short)
+    if version == :full
+      self.new.call(:full)
+    else
+      self.new.call
+    end
   end
 
-  def initialize(version=:full)
+  def initialize(version=:short)
     @full = version == :full ? true : false
   end
 
