@@ -27,7 +27,7 @@ class EmissionDownloader
       File.open(filename, 'wb') do |file|
         file.write(html)
       end
-    rescue OpenURI::HTTPError, Timeout::Error, SocketError
+    rescue OpenURI::HTTPError, Timeout::Error, SocketError, Errno::ECONNRESET
       logger.error "#{filename.split("/")[-1]} could not be downloaded"
     end
   end
