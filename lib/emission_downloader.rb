@@ -16,7 +16,7 @@ class EmissionDownloader
   end
 
   def already_downloaded?
-    File.exist?(filename) && (File.open(filename).size > 1)
+    EmissionDownloader.downloaded?(tracking_number)
   end
 
   def download_file
@@ -26,13 +26,19 @@ class EmissionDownloader
       logger.info("Downloading #{filename.split("/")[-1]} [#{html.size} bits]")
       File.open(filename, 'wb') do |file|
         file.write(html)
+        store("done", html.size, html)
       end
-    rescue OpenURI::HTTPError, Timeout::Error, SocketError, Errno::ECONNRESET
+    rescue OpenURI::HTTPError, Timeout::Error, SocketError, Errno::ECONNRESET => e
+      store("failure", e.message)
       logger.error "#{filename.split("/")[-1]} could not be downloaded"
     end
   end
 
   def filename
     "#{TMP_DIR}/#{@filename}"
+  end
+
+  def store(status, desc)
+    EmissionDownloader.store(tracking_number, status, html.size)
   end
 end
