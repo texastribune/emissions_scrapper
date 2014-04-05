@@ -16,7 +16,7 @@ class EmissionDownloader
   end
 
   def already_downloaded?
-    EmissionDownloader.downloaded?(tracking_number)
+    EmissionDownloaded.downloaded?(tracking_number)
   end
 
   def download_file
@@ -38,7 +38,7 @@ class EmissionDownloader
     "#{TMP_DIR}/#{@filename}"
   end
 
-  def store(status, desc)
-    EmissionDownloader.store(tracking_number, status, html.size)
+  def store(status, desc, content="")
+    EmissionDownloaded.store(tracking_number, status, desc, content)
   end
 end

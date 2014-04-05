@@ -22,6 +22,7 @@ class EmissionCSV
         pbar.inc
       end
     end
+    puts "#{filename} has been generated"
   end
 
   def filename

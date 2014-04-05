@@ -1,11 +1,15 @@
 module EmissionStorer
+  def self.tracking_number(filename)
+    filename.split("/")[-1].split(".")[0]
+  end
+
   def self.start
+    i = 0
     EmissionEvent.destroy_all
     EmissionSource.destroy_all
-    range = 10001..20000
-    pbar = ProgressBar.new("Importing", 10000)
-    i = 0
-    range.each do |tracking_number|
+    tracking_numbers = Dir["#{TMP_DIR}/*.html"].map {|filename| tracking_number(filename)}
+    pbar = ProgressBar.new("Importing", tracking_numbers.length)
+    tracking_numbers.each do |tracking_number|
       filename = "#{TMP_DIR}/#{tracking_number}.html"
       if File.exists?(filename)
         File.open(filename) do |file|
