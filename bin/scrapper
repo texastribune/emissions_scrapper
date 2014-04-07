@@ -4,21 +4,16 @@ $:.unshift File.join(File.dirname(__FILE__), *%w{ .. config })
 $:.unshift File.join(File.dirname(__FILE__), *%w{ .. lib })
 
 require 'boot'
-require 'emission_scrapper'
 
 case ARGV[0]
 when "download"
-  from = ARGV[1] ? ARGV[1] : 10001
-  to = ARGV[2] ? ARGV[2] : 20000
-  EmissionScrapper.download(from, to)
+  from = ARGV[1] ? ARGV[1] : 100001
+  to = ARGV[2] ? ARGV[2] : 200000
+  Downloader.call(from, to)
 when "scrap"
-  EmissionStorer.start
+  Scrapper.call
 when "export"
-  if ARGV[1]
-    EmissionCSV.call(ARGV[1])
-  else
-    EmissionCSV.call
-  end
+  Exporter.call(ARGV[1])
 else
   STDOUT.puts <<-EOF
 Please provide command name

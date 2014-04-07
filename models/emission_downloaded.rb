@@ -8,6 +8,8 @@ class EmissionDownloaded
   field :desc, type: String
   field :content, type: String
 
+  scope :done, where(status: 'done')
+
   validate :has_valid_status
 
   VALID_STATUSES = %w(done not_found failed)
@@ -57,5 +59,9 @@ class EmissionDownloaded
 
   def has_valid_status
     VALID_STATUSES.include?(self.status)
+  end
+
+  def scrapped?
+    !!EmissionEvent.where(tracking_number: self.tracking_number).first
   end
 end

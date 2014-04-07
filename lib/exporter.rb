@@ -1,6 +1,6 @@
 require 'csv'
 
-class EmissionCSV
+class Exporter
   def self.call(version=:short)
     if version == :full
       self.new.call(:full)
@@ -14,19 +14,33 @@ class EmissionCSV
   end
 
   def call
-    pbar = ProgressBar.new("Exporting", EmissionEvent.count)
+    total_emission_events = EmissionEvent.count
+    per_page = 100
+    total_pages = (total_emission_events/per_page.to_f).ceil
+
+    pbar = ProgressBar.new("Exporting", total_pages)
+    insert_titles
+
+    total_pages.times.each do |page|
+      CSV.open(filename, 'a') do |csv|
+        EmissionEvent.limit(per_page).skip(page * per_page).each do |emission_event|
+          csv << fields.map { |field| emission_event.send(field) }
+        end
+      end
+      pbar.inc
+    end
+
+    puts "\n#{filename} has been generated"
+  end
+
+  def insert_titles
     CSV.open(filename, 'wb') do |csv|
       csv << titles
-      EmissionEvent.all.each do |emission_event|
-        csv << fields.map { |field| emission_event.send(field) }
-        pbar.inc
-      end
     end
-    puts "#{filename} has been generated"
   end
 
   def filename
-    "#{APP_ROOT}/output_#{Time.now.to_i}.csv"
+    @filename ||= "#{APP_ROOT}/output_#{Time.now.to_i}.csv"
   end
 
   def titles
