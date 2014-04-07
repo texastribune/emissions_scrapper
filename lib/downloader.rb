@@ -7,7 +7,7 @@ module Downloader
     slices = (from..to).each_slice(40)
     pbar = ProgressBar.new("Sync", slices.count)
     slices.each do |slice|
-      slice.each do |tracking_number|
+      PageHTML.not_downloaded_batch(slice).each do |tracking_number|
         threads << Thread.new do
           pages << PageDownloader.new(tracking_number).call
         end
