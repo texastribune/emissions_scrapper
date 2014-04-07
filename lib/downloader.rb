@@ -1,5 +1,5 @@
 module Downloader
-  def call
+  def call(from, to)
     logger.info("Files syncronization #{from}/#{to}")
 
     threads = []
@@ -9,11 +9,11 @@ module Downloader
     slices.each do |slice|
       slice.each do |tracking_number|
         threads << Thread.new do
-          pages << EmissionDownloader.new(tracking_number).call
+          pages << PageDownloader.new(tracking_number).call
         end
       end
       threads.each { |t| t.join }
-      downloaded_pages = pages.select { |page| page.status == "done" }
+      downloaded_pages = pages.select { |page| page.status == "done" }.map(&:to_hash)
       PageHTML.collection.insert(downloaded_pages)
       logger.info("#{downloaded_pages.length} pages has been stored")
       pages = []

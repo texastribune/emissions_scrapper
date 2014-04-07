@@ -1,7 +1,11 @@
 class PageDownloader
-  Page = Struct.new(:status, :content) do
+  Page = Struct.new(:status, :content, :tracking_number) do
     def to_hash
-      {status: self.status, content: self.content}
+      {
+        status: self.status,
+        tracking_number: self.tracking_number,
+        content: self.content
+      }
     end
   end
 
@@ -20,9 +24,9 @@ class PageDownloader
     rescue OpenURI::HTTPError, Timeout::Error, SocketError, Errno::ECONNRESET => e
       content = e.message
       status = "failed"
-      logger.error("#{tracking_number} has failed!")
+      logger.error("#{tracking_number} failed with #{e.message}")
     end
-    Page.new(status, content)
+    Page.new(status, content, tracking_number)
   end
 
   def url(tracking_number)
