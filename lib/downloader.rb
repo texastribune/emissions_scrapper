@@ -22,18 +22,3 @@ module Downloader
   end
   module_function :call
 end
-
-
-__END__
-
-per_page = 100
-total_emissions = EmissionDownloaded.count
-total_pages = (EmissionDownloaded/per_page.to_f).ceil
-
-batch = []
-total_pages.times do |page|
-  EmissionDownloaded.skip(per_page*page).limit(per_page).each do |ed|
-
-  end
-  batch = []
-end
