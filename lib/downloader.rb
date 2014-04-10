@@ -14,7 +14,7 @@ module Downloader
       end
       threads.each { |t| t.join }
       downloaded_pages = pages.select { |page| page.status == "done" }.map(&:to_hash)
-      PageHTML.collection.insert(downloaded_pages)
+      PageHTML.insert(downloaded_pages)
       logger.info("#{downloaded_pages.length} pages has been stored")
       pbar.inc
     end
