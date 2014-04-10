@@ -1,0 +1,14 @@
+development:
+  database: scrapper
+  username: root
+  host: localhost
+
+production:
+  database: emissions_scrapper
+  username: admin
+  password: maybemongo
+
+test:
+  database: emissions_scrapper
+  username: admin
+  password: maybemongo
