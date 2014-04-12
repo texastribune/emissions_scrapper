@@ -2,13 +2,16 @@ development:
   database: scrapper
   username: root
   host: localhost
+  adapter: mysql
 
 production:
   database: emissions_scrapper
   username: admin
   password: maybemongo
+  adapter: mysql
 
 test:
   database: emissions_scrapper
   username: admin
   password: maybemongo
+  adapter: mysql

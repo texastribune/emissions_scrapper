@@ -18,8 +18,6 @@ module Kernel
   end
 end
 
-Mongoid.load!("config/mongoid.yml", :development)
-
 database_config = YAML.load_file('config/database.yml')
 database_config[APP_ENV]["logger"] = logger
 DB = Sequel.connect(database_config[APP_ENV])
