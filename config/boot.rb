@@ -11,6 +11,11 @@ $LOAD_PATH.unshift(APP_ROOT)
 Bundler.require(:default)
 
 LOGGER = Logger.new("#{APP_ROOT}/log/emissions.log")
+if APP_ENV == "production"
+  LOGGER.level = Logger::DEBUG
+else
+  LOGGER.level = Logger::ERROR
+end
 
 module Kernel
   def logger
