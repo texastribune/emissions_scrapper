@@ -8,7 +8,7 @@ class PageHTML
   field :tracking_number, type: String
 
   scope :done, where(status: 'done')
-  scope :non_scrapped, where(scrapped: false)
+  scope :non_scrapped, where(:scrapped.ne => true)
 
   before_create :ensure_scrapped_vale
 
