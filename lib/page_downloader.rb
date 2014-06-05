@@ -21,7 +21,7 @@ class PageDownloader
     begin
       content = open(url(tracking_number), "User-Agent" => user_agent).read
       logger.info("#{tracking_number} has been downloaded")
-    rescue OpenURI::HTTPError, Timeout::Error, SocketError, Errno::ECONNRESET => e
+    rescue OpenURI::HTTPError, Timeout::Error, SocketError, Errno::ECONNRESET, EOFError => e
       content = e.message
       status = "failed"
       logger.error("#{tracking_number} failed with #{e.message}")
