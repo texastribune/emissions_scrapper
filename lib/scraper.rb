@@ -1,4 +1,4 @@
-module Scrapper
+module Scraper
   def self.tracking_number(filename)
     filename.split("/")[-1].split(".")[0]
   end
