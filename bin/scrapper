@@ -1,27 +1,64 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 $:.unshift File.join(File.dirname(__FILE__), *%w{ .. config })
 $:.unshift File.join(File.dirname(__FILE__), *%w{ .. lib })
 
+options = {}
+
+OptionParser.new do |opt|
+  opt.banner = "Usage: scrapper COMMAND [OPTIONS]"
+  opt.separator  ""
+  opt.separator  "Commands"
+  opt.separator  "     scrap: download and scrap"
+  opt.separator  "     export: generate a csv file"
+  opt.separator  "     download: download html files"
+  opt.separator  "     import: import from downloaded files"
+  opt.separator  ""
+  opt.separator  "Options"
+
+  opt.on("-l", "--latest", "scrap new pages (default)") do
+    options[:latest] = true
+  end
+
+  opt.on("-f", "--from ID", "scrap from ID") do |id|
+    options[:from] = id
+  end
+
+  opt.on("-t", "--to ID", "scrap to ID") do |id|
+    options[:to] = id
+  end
+
+  opt.on("-d", "--directory DIRECTORY", "import files on directory") do |directory|
+    options[:directory] = directory
+  end
+
+  opt.on("-h","--help","help") do
+    puts opt_parser
+  end
+end.parse!
+
+def exit_with_error
+  fail ArgumentError, "You need to specify a range of elements to scrap"
+end
+
+if (ARGV[0] == "scrap" || ARGV[0] == "download") && !options[:latest]
+  exit_with_error unless options[:from] && options[:to]
+end
+
 require 'boot'
+
+options[:latest] = true
 
 case ARGV[0]
 when "download"
-  from = ARGV[1] ? ARGV[1] : 100001
-  to = ARGV[2] ? ARGV[2] : 200000
-  Downloader.call(from, to)
+  Downloader.new(options).call
 when "scrap"
-  Scrapper.call
+  Scrapper.new(options).call
 when "export"
-  Exporter.call(ARGV[1])
+  Exporter.call
+when "import"
+  Importer.new(options).call
 else
-  STDOUT.puts <<-EOF
-Please provide command name
-
-Usage:
-  scrapper download [from] [to]
-  scrapper scrap
-  scrapper export [short/full]
-EOF
+  puts opt_parser
 end
-
