@@ -6,7 +6,13 @@ class PageHTML < Sequel::Model
   end
 
   def self.insert(downloaded_pages)
-    self.dataset.multi_insert(downloaded_pages)
+    downloaded_pages.each do |downloaded_page|
+      begin
+        self.dataset.insert(downloaded_page)
+      rescue Sequel::DatabaseError => e
+        logger.error("#{tracking_number} failed with #{e.message}")
+      end
+    end
   end
 
   def self.non_scrapped_count
