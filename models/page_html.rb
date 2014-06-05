@@ -25,6 +25,14 @@ class PageHTML < Sequel::Model
             offset(((page-1)*per_page).to_i)
   end
 
+  def self.last
+    begin
+      order(Sequel.desc(:tracking_number)).limit(1).first.tracking_number
+    rescue NoMethodError
+      0
+    end
+  end
+
   def scrapped!
     update_fields({scrapped: true}, [:scrapped])
   end
