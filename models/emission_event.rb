@@ -50,7 +50,7 @@ class EmissionEvent < Sequel::Model
         Time.strptime(str, "%m/%d/%Y")
       end
     rescue ArgumentError
-      puts "WRONG #{str}"
+      logger.error("#{str} has not been parsed.")
       Time.now
     end
   end
