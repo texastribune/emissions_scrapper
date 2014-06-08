@@ -6,6 +6,10 @@ $:.unshift File.join(File.dirname(__FILE__), *%w{ .. lib })
 require 'boot'
 
 case ARGV[0]
+when "files"
+  from = ARGV[1] ? ARGV[1] : 100001
+  to = ARGV[2] ? ARGV[2] : 200000
+  Filer.call(from, to)
 when "download"
   from = ARGV[1] ? ARGV[1] : 100001
   to = ARGV[2] ? ARGV[2] : 200000
