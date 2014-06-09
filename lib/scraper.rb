@@ -57,7 +57,7 @@ class Scraper
         begin
           extracted_event = EmissionEventExtractor.new(page.content, page.tracking_number).call
         rescue EmissionEventExtractor::NoTable => e
-          logger.info("#{e.message}")
+          logger.error("#{e.message}")
           next
         end
         sources = extracted_event.delete(:sources)
