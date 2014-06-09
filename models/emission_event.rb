@@ -22,6 +22,7 @@ class EmissionEvent < Sequel::Model
     self.event_ended_time = convert_time(self.event_ended)
     self.event_duration = (self.event_ended_time -
                             self.event_began_time)*24
+    self.year = find_year(self.event_began)
     self.city = find_city(self.city_county)
     self.county = find_county(self.city_county)
   end
@@ -53,5 +54,9 @@ class EmissionEvent < Sequel::Model
       logger.error("#{str} has not been parsed.")
       Time.now
     end
+  end
+
+  def find_year(str)
+    convert_time(str).year
   end
 end
