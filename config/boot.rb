@@ -24,9 +24,9 @@ module Kernel
   end
 end
 
-
 database_config = YAML.load_file('config/database.yml')
 DB = Sequel.connect(database_config[APP_ENV])
+DB.loggers << logger
 
 Dir["#{APP_ROOT}/lib/**/*.rb"].sort.each {|file| require file}
 Dir["#{APP_ROOT}/models/**/*.rb"].sort.each {|file| require file}
