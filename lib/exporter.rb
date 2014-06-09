@@ -1,9 +1,10 @@
 require 'csv'
+require 'active_support/all'
 
 class Exporter
   def self.call(version=:short)
     if version == :full
-      self.new.call(:full)
+      self.new(:full).call
     else
       self.new.call
     end
@@ -23,7 +24,8 @@ class Exporter
 
     total_pages.times.each do |page|
       CSV.open(filename, 'a') do |csv|
-        EmissionEvent.limit(per_page).skip(page * per_page).each do |emission_event|
+        EmissionEvent.paginate(page + 1, per_page).each do |emission_event|
+          logger.info("Exporting #{emission_event.tracking_number}")
           csv << fields.map { |field| emission_event.send(field) }
         end
       end
@@ -45,9 +47,9 @@ class Exporter
 
   def titles
     if @full
-      full_fields(&:titleize)
+      full_fields.map { |field| field.to_s.titleize }
     else
-      short_fields.map(&:titleize)
+      short_fields.map { |field| field.to_s.titleize }
     end
   end
 
@@ -60,7 +62,7 @@ class Exporter
   end
 
   def full_fields
-    EmissionEvent.fields.keys
+    EmissionEvent.fields
   end
 
   def short_fields

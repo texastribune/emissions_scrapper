@@ -1,48 +1,30 @@
-class EmissionEvent
-  include Mongoid::Document
-  field :regulated_entity_name, type: String
-  field :physical_location, type: String
-  field :regulated_entity_rn_number, type: String
-  field :city_county, type: String
-  field :type_of_air_emission_event, type: String
-  field :event_began, type: String
-  field :event_ended, type: String
-  field :this_is_based_on_the, type: String
-  field :cause, type: String
-  field :action_taken, type: String
-  field :emissions_estimation_method, type: String
-  field :city, type: String
-  field :county, type: String
-  field :tracking_number, type: Integer
+class EmissionEvent < Sequel::Model
+  def self.count
+    dataset.count
+  end
 
-  field :event_began_time, type: DateTime
-  field :event_ended_time, type: DateTime
-  field :event_duration, type: Float
-  field :city, type: String
-  field :county, type: String
+  def self.paginate(page, per_page=100)
+    dataset.order(:event_began_time).limit(per_page).offset(page * per_page)
+  end
 
-  has_many :emission_sources
-  validates_presence_of :tracking_number
-  validates_uniqueness_of :tracking_number
-
-  before_create :store_numeric_values
-
-  def self.store(extracted_event)
-    emission_event = self.new
-    extracted_event[:emission_table].each do |key, value|
-      emission_event.write_attribute(key.to_sym, value)
-    end
+  def self.store(attr)
+    emission_event = self.new(attr)
     emission_event.save
     emission_event
   end
 
-  def store_numeric_values
+  def self.fields
+    self.columns - [:page_html_id]
+  end
+
+  def before_create
     self.event_began_time = convert_time(self.event_began)
     self.event_ended_time = convert_time(self.event_ended)
     self.event_duration = (self.event_ended_time -
                             self.event_began_time)*24
-    write_attribute(:city, find_city(self.city_county))
-    write_attribute(:county, find_county(self.city_county))
+    self.year = find_year(self.event_began)
+    self.city = find_city(self.city_county)
+    self.county = find_county(self.city_county)
   end
 
   def find_city(city_county_str)
@@ -69,8 +51,12 @@ class EmissionEvent
         Time.strptime(str, "%m/%d/%Y")
       end
     rescue ArgumentError
-      puts "WRONG #{str}"
+      logger.error("#{str} has not been parsed.")
       Time.now
     end
+  end
+
+  def find_year(str)
+    convert_time(str).year
   end
 end

@@ -22,6 +22,7 @@ GEM
       tzinfo (~> 0.3.29)
     moped (1.5.2)
     multi_json (1.9.2)
+    mysql (2.9.1)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     origin (1.1.0)
@@ -31,6 +32,7 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     rake (10.2.2)
+    sequel (4.9.0)
     slop (3.5.0)
     tzinfo (0.3.39)
 
@@ -41,7 +43,9 @@ DEPENDENCIES
   activesupport
   bson_ext
   mongoid (= 3.1.6)
+  mysql
   nokogiri
   progressbar
   pry
   rake
+  sequel
