@@ -1,4 +1,12 @@
 class EmissionEventExtractor
+  class NoTable < StandardError
+    attr_reader :object
+    def initialize(object, message="")
+      super("#{object.tracking_number} - #{message}")
+      @object = object
+    end
+  end
+
   def self.columns
     %w(regulated_entity_name
       physical_location
@@ -15,7 +23,7 @@ class EmissionEventExtractor
       )
   end
 
-  attr_reader :doc
+  attr_reader :doc, :tracking_number
 
   def initialize(html, tracking_number)
     @tracking_number = tracking_number
@@ -25,6 +33,9 @@ class EmissionEventExtractor
 
   def call
     table = doc.css('table').first
+
+    raise NoTable.new(self, 'No table') if table.nil?
+
     @output[:emission_table] = extract_emission_table(table)
 
     sources = []
