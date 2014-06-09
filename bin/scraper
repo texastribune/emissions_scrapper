@@ -54,11 +54,12 @@ case ARGV[0]
 when "download"
   Downloader.new(options).call
 when "scrap"
-  Scrapper.new(options).call
+  Scraper.new(options).call
 when "export"
   Exporter.call
 when "import"
   Importer.new(options).call
+  Scraper.new.scraping
 else
   puts opt_parser
 end

@@ -1,10 +1,10 @@
-class Scrapper
+class Scraper
   def initialize(options={})
     if options[:latest]
       populate_from_to
     else
       @from = options[:from]
-      @to = option[:to]
+      @to = options[:to]
     end
   end
 
@@ -16,7 +16,7 @@ class Scrapper
 
   def call
     download_to_db(@from, @to)
-    scrapping
+    scraping
   end
 
   def download_to_db(from, to)
@@ -46,7 +46,7 @@ class Scrapper
     end
   end
 
-  def scrapping
+  def scraping
     total_documents = PageHTML.non_scrapped_count
     per_page = 100
     total_pages = (total_documents/per_page.to_f).ceil
@@ -54,7 +54,12 @@ class Scrapper
     logger.info("Starting scrapping process for #{total_documents} documents")
     total_pages.times.each do |page|
       PageHTML.non_scrapped_paginate(page + 1, per_page).each do |page|
-        extracted_event = EmissionEventExtractor.new(page.content, page.tracking_number).call
+        begin
+          extracted_event = EmissionEventExtractor.new(page.content, page.tracking_number).call
+        rescue EmissionEventExtractor::NoTable => e
+          logger.info("#{e.message}")
+          next
+        end
         sources = extracted_event.delete(:sources)
         emission_event = EmissionEvent.store(extracted_event[:emission_table])
         page.scrapped!
