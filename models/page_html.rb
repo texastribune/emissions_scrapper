@@ -5,13 +5,11 @@ class PageHTML < Sequel::Model
     tracking_numbers - existing
   end
 
-  def self.insert(downloaded_pages)
-    downloaded_pages.each do |downloaded_page|
-      begin
-        self.dataset.insert(downloaded_page)
-      rescue Sequel::DatabaseError => e
-        logger.error("#{tracking_number} failed with #{e.message}")
-      end
+  def self.insert(page_data)
+    begin
+      self.dataset.insert(page_data)
+    rescue Sequel::DatabaseError => e
+      logger.error("#{page_data[:tracking_number]} failed with #{e.message}")
     end
   end
 
