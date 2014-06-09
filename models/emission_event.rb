@@ -4,7 +4,7 @@ class EmissionEvent < Sequel::Model
   end
 
   def self.paginate(page, per_page=100)
-    dataset.order(:tracking_number).limit(per_page).offset(page * per_page)
+    dataset.order(:event_began_time).limit(per_page).offset(page * per_page)
   end
 
   def self.store(attr)
