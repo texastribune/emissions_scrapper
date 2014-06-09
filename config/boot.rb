@@ -13,9 +13,9 @@ Bundler.require(:default)
 
 LOGGER = Logger.new("#{APP_ROOT}/log/emissions.log")
 if APP_ENV == "production"
-  LOGGER.level = Logger::DEBUG
-else
   LOGGER.level = Logger::ERROR
+else
+  LOGGER.level = Logger::DEBUG
 end
 
 module Kernel
@@ -26,7 +26,8 @@ end
 
 database_config = YAML.load_file('config/database.yml')
 DB = Sequel.connect(database_config[APP_ENV])
-DB.loggers << logger
+# DB.loggers << logger
+# DB.sql_log_level = :info
 
 Dir["#{APP_ROOT}/lib/**/*.rb"].sort.each {|file| require file}
 Dir["#{APP_ROOT}/models/**/*.rb"].sort.each {|file| require file}
