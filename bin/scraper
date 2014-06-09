@@ -56,7 +56,7 @@ when "download"
 when "scrap"
   Scraper.new(options).call
 when "export"
-  Exporter.call
+  Exporter.call(:full)
 when "import"
   Importer.new(options).call
   Scraper.new.scraping

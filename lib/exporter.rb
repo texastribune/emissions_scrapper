@@ -4,7 +4,7 @@ require 'active_support/all'
 class Exporter
   def self.call(version=:short)
     if version == :full
-      self.new.call(:full)
+      self.new(:full).call
     else
       self.new.call
     end
@@ -25,6 +25,7 @@ class Exporter
     total_pages.times.each do |page|
       CSV.open(filename, 'a') do |csv|
         EmissionEvent.paginate(page + 1, per_page).each do |emission_event|
+          logger.info("Exporting #{emission_event.tracking_number}")
           csv << fields.map { |field| emission_event.send(field) }
         end
       end
