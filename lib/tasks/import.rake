@@ -35,11 +35,12 @@ task import_db: :environment do
   end
 end
 
+desc "Create tables"
 task migrate: :environment do
   unless DB.table_exists? :page_htmls
     DB.create_table :page_htmls do
       primary_key :id
-      File        :content
+      File        :content, size: :medium
       Integer     :tracking_number, unique: true
       String      :status
       Boolean     :scrapped, default: false
@@ -65,9 +66,10 @@ task migrate: :environment do
 
       DateTime :event_began_time
       DateTime :event_ended_time
-      Float :event_duration, default: 0
-      String :city
-      String :county
+      Float    :event_duration, default: 0
+      String   :city
+      String   :county
+      Integer  :year
     end
   end
 end
